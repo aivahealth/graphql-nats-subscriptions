@@ -23,7 +23,14 @@ export class StanPubSub implements PubSubEngine {
   async connect() {
     const self = this;
     return new Promise((resolve, reject) => {
-      const maybeClient = stan.connect(this.options.clusterId, this.options.clientId, { url: this.options.natsUrl });
+      const maybeClient = stan.connect(
+        this.options.clusterId,
+        this.options.clientId,
+        {
+          url: this.options.natsUrl,
+          connectTimeout: 1000 * 5,
+        },
+      );
       maybeClient.on("connect", () => {
         maybeClient.removeAllListeners("error");
         self.stanClient = maybeClient;
